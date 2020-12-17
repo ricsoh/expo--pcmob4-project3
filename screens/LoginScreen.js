@@ -7,7 +7,7 @@ export default function LoginScreen({ navigation }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const db = firebase.firestore().collection("");
+    const db = firebase.firestore().collection("todos");
 
     function gotoChatScreen() {
         setEmail("");
