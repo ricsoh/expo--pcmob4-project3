@@ -1,13 +1,34 @@
 import firebase from "../database/firebaseDB";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
-//import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+
+//    const db = firebase.firestore().collection("todos");
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 export default function LoginScreen({ navigation }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const db = firebase.firestore().collection("todos");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    // Firestore successful will go to ChatScreen
+    function login() {
+      // Clear the input text and error message
+      Keyboard.dismiss();
+      setErrorMessage("");
+
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          console.log("Signed in!");
+          navigation.navigate("Chat", { email });
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setErrorMessage("Signed Fail!");
+        });
+    }
 
     function gotoChatScreen() {
         setEmail("");
@@ -17,38 +38,45 @@ export default function LoginScreen({ navigation }) {
 
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={{ paddingTop: 23, flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <View style={styles.container}>
                 <Text style={styles.label}>Login</Text>
                 <Text style={styles.labelText}>Email</Text>
                 <TextInput
                     placeholder="Enter Email"
-                    style={styles.textInput}
+                    style={styles.textInput} autoCaptilize="none" autoCompleteType="email" keyboardType="email-address"
                     value={email}
-                    onChangeText={(newEmail) => setEmail(newEmail)}
+                    onChangeText={(input) => setEmail(input)}
                 ></TextInput>
                 <Text style={styles.labelText}>Password</Text>
                 <TextInput
                     placeholder="Enter Password"
                     secureTextEntry={true}
-                    style={styles.textInput}
+                    style={styles.textInput} autoCaptilize="none" autoCompleteType="password"
                     value={password}
-                    onChangeText={(newPassword) => setPassword(newPassword)}
+                    onChangeText={(input) => setPassword(input)}
                 ></TextInput>
                 <TouchableOpacity
-                    onPress={gotoChatScreen}
+                    onPress={login}
                     style={[styles.button, styles.submitButton]}
                     >
                     <Text style={styles.buttonText}>Log In</Text>
                 </TouchableOpacity>
+                <Text style={styles.errorText} >{errorMessage}</Text>
             </View>
         </TouchableWithoutFeedback>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+      paddingTop: 24,
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
     label: {
       fontWeight: "bold",
-      fontSize: 24,
+      fontSize: 36,
       marginBottom: 30,
     },
     textInput: {
@@ -68,6 +96,7 @@ const styles = StyleSheet.create({
       borderRadius: 10,
     },
     buttonText: {
+      fontSize: 18,
       fontWeight: "bold",
       color: "white",
       textAlign: 'center',
@@ -82,6 +111,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "black",
         textAlign: 'left',
+      },
+    errorText: {
+        color: "red",
+        height: 40,
       },
     });
   

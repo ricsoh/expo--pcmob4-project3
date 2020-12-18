@@ -9,8 +9,8 @@ export default function ChatScreen({ navigation }) {
      // This is to set up the top right button
      useEffect(() => {
       navigation.setOptions({
+//        headerLeft: ""
         headerRight: () => (
-
           <TouchableOpacity onPress={Logout}>
             <MaterialCommunityIcons
               name= "logout"
