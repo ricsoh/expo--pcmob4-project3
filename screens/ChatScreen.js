@@ -1,143 +1,102 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import firebase from "../database/firebaseDB";
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { GiftedChat } from "react-native-gifted-chat";
 
+const db = firebase.firestore().collection("messages");
 const auth = firebase.auth();
 
 export default function ChatScreen({ navigation }) {
-
   const [messages, setMessages] = useState([]);
+  const [currentID, setCurrentID] = useState("");
+  const [currentName, setCurrentName] = useState("");
 
-     // This is to set up the top right button
-     useEffect(() => {
-      //
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          navigation.navigate("Chat");
-        } else {
-          navigation.navigate("Login");
-        }
+  useEffect(() => {
+    // This is the listener for authentication
+    const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("Chat");
+        setCurrentID(firebase.auth().currentUser.uid);
+        setCurrentName(firebase.auth().currentUser.email);
+      } else {
+        navigation.navigate("Login");
+        setCurrentID("");
+        setCurrentName("");
+      }
+    });
+    // This sets up the top right button
+    navigation.setOptions({
+//      title: (currentName),
+      headerRight: () => (
+        <TouchableOpacity onPress={logout}>
+          <MaterialCommunityIcons
+            name="logout"
+            size={32}
+            color="black"
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+
+    // This loads data from firebase
+    const unsubscribeSnapshot = db
+      .orderBy("createdAt", "desc")
+      .onSnapshot((collectionSnapshot) => {
+        const serverMessages = collectionSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          console.log(data);
+          const returnData = {
+            ...doc.data(),
+            createdAt: new Date(data.createdAt.seconds * 1000), // convert to JS date object
+          };
+          return returnData;
+        });
+        setMessages(serverMessages);
       });
 
-      navigation.setOptions({
-//        need to remove headerLeft:
-        headerRight: () => (
-          <TouchableOpacity onPress={logout}>
-            <MaterialCommunityIcons
-              name= "logout"
-              size= {40}
-              color= "black"
-              style= {{
-                color: "black",
-                marginRight: 10,
-              }}
-            />
-          </TouchableOpacity>
-        ),
-      });
-
-      setMessages([
-        {
-          _id: 1,
-          text: "Hello developer",
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: "React Native",
-            avatar: "https://placeimg.com/140/140/any",
-          },
-        },
-      ]);
-
-      return unsubscribe;
-    }, []);
+    return () => {
+      unsubscribeAuth();
+      unsubscribeSnapshot();
+    };
+  }, []);
 
   function logout() {
+    setCurrentID("");
+    setCurrentName("");
     auth.signOut();
-//    navigation.navigate("Login");
-  }    
-
-  function clearMessage() {
-    setMessages([]);
   }
 
-  function submitMessage() {
-    // Store message here
-    setMessages([]);
+  function sendMessages(newMessages) {
+    console.log(newMessages);
+    const newMessage = newMessages[0];
+    db.add(newMessage);
+    //setMessages([...newMessages, ...messages]);
   }
 
-  return(
-    <View style={styles.container}>
-      <View style={{ paddingTop: 23, flex: 1, alignItems: "center", height: "80%" }}>
-        <Text style={styles.label}>ChatScreen</Text>
-        {/* Flatlist goes here */}
-      </View>
-      <View style={{ height: "20%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-        <TextInput
-          placeholder="Enter message"
-          style={styles.textInput}
-          value={messages}
-          onChangeText={(newMessages) => setMessages(newMessages)}
-        >
-        </TextInput>
-        <TouchableOpacity onPress={clearMessage}>
-          <MaterialIcons name="clear" size={40} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={submitMessage}>
-          <MaterialIcons name="add-circle" size={50} color="green" />
-        </TouchableOpacity>
-      </View>
-    </View>
+  return (
+    <GiftedChat
+      messages={messages}
+      onSend={(newMessages) => sendMessages(newMessages)}
+      renderUsernameOnMessage={true}
+      listViewProps={{
+        style: {
+          backgroundColor: "#777",
+        },
+      }}
+      user={{
+        _id: currentID,
+        name: currentName,
+//       _id: 1,
+      }}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "lightgray",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    label: {
-      fontWeight: "bold",
-      fontSize: 24,
-    },
-    textInput: {
-      margin: 20,
-      borderWidth: 1,
-      width: "65%",
-      height: 50,
-      padding: 10,
-      borderColor: "#ccc",
-      backgroundColor: "white",
-      borderRadius: 40,
-    },
-    buttons: {
-      flexDirection: "row",
-    },
-    button: {
-      width: 100,
-      padding: 10,
-      margin: 5,
-      borderRadius: 10,
-    },
-    buttonText: {
-      fontWeight: "bold",
-      color: "white",
-      textAlign: 'center',
-    },
-    submitButton: {
-      backgroundColor: "blue",
-    },
-    cancelButton: {
-      backgroundColor: "red",
-    },
-    labelText: {
-        fontWeight: "bold",
-        color: "black",
-        textAlign: 'left',
-      },
-    });
-  

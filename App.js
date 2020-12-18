@@ -11,13 +11,16 @@ export default function App() {
   
   return (
     <NavigationContainer>
+{/*      <Stack.Navigator mode="modal"> */}
       <Stack.Navigator>
+        <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{
             headerTitle: "Chat App",
             headerTitleAlign: "center",
+            headerLeft: "", // hide back arrow on hearder
             headerTitleStyle: {
               fontWeight: "bold",
               fontSize: 24,  
@@ -30,7 +33,6 @@ export default function App() {
             },
           }}
         />
-        <Stack.Screen name="Chat" component={ChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

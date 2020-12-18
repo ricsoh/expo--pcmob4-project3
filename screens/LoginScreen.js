@@ -21,23 +21,17 @@ export default function LoginScreen({ navigation }) {
       auth
         .signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
+          setEmail("");
+          setPassword("");
           console.log("Signed in!");
-          navigation.navigate("Chat", { email });
+//          navigation.navigate("Chat", { email });
         })
         .catch((error) => {
           console.log(error.message);
-          setErrorMessage("Signed Fail!");
+          setErrorMessage("Sign in Fail!");
         });
     }
 
-{/*    
-    function gotoChatScreen() {
-        setEmail("");
-        setPassword("");
-        navigation.navigate("Chat");
-    }
-  */}
-  
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
