@@ -1,5 +1,5 @@
 import firebase from "../database/firebaseDB";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
 //import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 

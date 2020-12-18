@@ -1,17 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
-import { MaterialIcons } from '@expo/vector-icons';
-import { withSafeAreaInsets } from "react-native-safe-area-context";
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function ChatScreen({ navigation }) {
 
   const [messages, setMessages] = useState([]);
+
+     // This is to set up the top right button
+     useEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+
+          <TouchableOpacity onPress={Logout}>
+            <MaterialCommunityIcons
+              name= "logout"
+              size= {40}
+              color= "black"
+              style= {{
+                color: "black",
+                marginRight: 10,
+              }}
+            />
+          </TouchableOpacity>
+        ),
+      });
+    });
+
+  function Logout() {
+    navigation.navigate("Login");
+  }    
 
   function clearMessage() {
     setMessages([]);
   }
 
   function submitMessage() {
+    // Store message here
     setMessages([]);
   }
 
@@ -19,6 +43,7 @@ export default function ChatScreen({ navigation }) {
     <View style={styles.container}>
       <View style={{ paddingTop: 23, flex: 1, alignItems: "center", height: "80%" }}>
         <Text style={styles.label}>ChatScreen</Text>
+        {/* Flatlist goes here */}
       </View>
       <View style={{ height: "20%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
         <TextInput
