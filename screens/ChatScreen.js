@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from "react-native";
+import firebase from "../database/firebaseDB";
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { GiftedChat } from "react-native-gifted-chat";
+
+const auth = firebase.auth();
 
 export default function ChatScreen({ navigation }) {
 
@@ -8,10 +12,19 @@ export default function ChatScreen({ navigation }) {
 
      // This is to set up the top right button
      useEffect(() => {
+      //
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          navigation.navigate("Chat");
+        } else {
+          navigation.navigate("Login");
+        }
+      });
+
       navigation.setOptions({
-//        headerLeft: ""
+//        need to remove headerLeft:
         headerRight: () => (
-          <TouchableOpacity onPress={Logout}>
+          <TouchableOpacity onPress={logout}>
             <MaterialCommunityIcons
               name= "logout"
               size= {40}
@@ -24,10 +37,26 @@ export default function ChatScreen({ navigation }) {
           </TouchableOpacity>
         ),
       });
-    });
 
-  function Logout() {
-    navigation.navigate("Login");
+      setMessages([
+        {
+          _id: 1,
+          text: "Hello developer",
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: "React Native",
+            avatar: "https://placeimg.com/140/140/any",
+          },
+        },
+      ]);
+
+      return unsubscribe;
+    }, []);
+
+  function logout() {
+    auth.signOut();
+//    navigation.navigate("Login");
   }    
 
   function clearMessage() {

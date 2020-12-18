@@ -30,12 +30,14 @@ export default function LoginScreen({ navigation }) {
         });
     }
 
+{/*    
     function gotoChatScreen() {
         setEmail("");
         setPassword("");
         navigation.navigate("Chat");
     }
-
+  */}
+  
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
