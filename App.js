@@ -23,10 +23,11 @@ export default function App() {
             headerLeft: "", // hide back arrow on hearder
             headerTitleStyle: {
               fontWeight: "bold",
-              fontSize: 24,  
+              fontSize: 24,
+              color: "black",
             },
             headerStyle: {
-              height: 120,
+              height: 100,
               backgroundColor: "gray",
               borderBottomColor: "#ccc",
               borderBottomWidth: 1,

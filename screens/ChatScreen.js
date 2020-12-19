@@ -23,18 +23,31 @@ export default function ChatScreen({ navigation }) {
     // This is the listener for authentication
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("Chat");
         setCurrentID(firebase.auth().currentUser.uid);
         setCurrentName(firebase.auth().currentUser.email);
+        navigation.navigate("Chat");
       } else {
+        //setCurrentID("");
+        //setCurrentName("");
         navigation.navigate("Login");
-        setCurrentID("");
-        setCurrentName("");
       }
     });
+    
     // This sets up the top right button
     navigation.setOptions({
-//      title: (currentName),
+      title: "Chap App",//(currentName),
+      headerTitleAlign: "center",
+      headerTitleStyle: {
+        fontWeight: "bold",
+        fontSize: 24,
+        color: "black",
+      },
+      headerStyle: {
+        height: 100,
+        backgroundColor: "gray",
+        borderBottomColor: "#ccc",
+        borderBottomWidth: 1,
+      },      
       headerRight: () => (
         <TouchableOpacity onPress={logout}>
           <MaterialCommunityIcons
@@ -63,15 +76,21 @@ export default function ChatScreen({ navigation }) {
         setMessages(serverMessages);
       });
 
+    // This refreshes the screen
+    const unsubscribeRefresh = navigation.addListener('focus', () => {
+//      alert('Refreshed');
+    });
+
     return () => {
       unsubscribeAuth();
       unsubscribeSnapshot();
+      unsubscribeRefresh();
     };
   }, []);
 
   function logout() {
-    setCurrentID("");
-    setCurrentName("");
+//    setCurrentName("");
+//    setCurrentID("");
     auth.signOut();
   }
 
@@ -89,7 +108,8 @@ export default function ChatScreen({ navigation }) {
       renderUsernameOnMessage={true}
       listViewProps={{
         style: {
-          backgroundColor: "#777",
+          backgroundColor: "lightgray",
+//          backgroundColor: "#777",
         },
       }}
       user={{

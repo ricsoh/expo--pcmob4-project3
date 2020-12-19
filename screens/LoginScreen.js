@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     },
     label: {
       fontWeight: "bold",
-      fontSize: 36,
+      fontSize: 24,
       marginBottom: 30,
     },
     textInput: {
