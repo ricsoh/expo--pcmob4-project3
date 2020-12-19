@@ -1,6 +1,7 @@
 import firebase from "../database/firebaseDB";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 //    const db = firebase.firestore().collection("todos");
 const db = firebase.firestore();
@@ -35,29 +36,50 @@ export default function LoginScreen({ navigation }) {
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
-                <Text style={styles.label}>Login</Text>
+{/*                <Text style={styles.label}>Login</Text> */}
                 <Text style={styles.labelText}>Email</Text>
-                <TextInput
-                    placeholder="Enter Email"
-                    style={styles.textInput} autoCaptilize="none" autoCompleteType="email" keyboardType="email-address"
-                    value={email}
-                    onChangeText={(input) => setEmail(input)}
-                ></TextInput>
+                <View style={styles.textInputView}>
+                  <TextInput
+                      placeholder="Enter Email"
+  //                    clearButtonMode= "always" // only for iOS
+                      style={styles.textInput} autoCaptilize="none" autoCompleteType="email" keyboardType="email-address"
+                      value={email}
+                      onChangeText={(input) => setEmail(input)}
+                  ></TextInput>
+                  <TouchableOpacity onPress={() => setEmail("")}>
+                    <MaterialCommunityIcons
+                      name="close-circle-outline"
+                      size={32}
+                      color="gray"
+                      style={{ marginRight: 20 }}
+                    />
+                  </TouchableOpacity>                
+                </View>
                 <Text style={styles.labelText}>Password</Text>
-                <TextInput
-                    placeholder="Enter Password"
-                    secureTextEntry={true}
-                    style={styles.textInput} autoCaptilize="none" autoCompleteType="password"
-                    value={password}
-                    onChangeText={(input) => setPassword(input)}
-                ></TextInput>
+                <View style={styles.textInputView}>
+                  <TextInput
+                      placeholder="Enter Password"
+                      secureTextEntry={true}
+                      style={styles.textInput} autoCaptilize="none" autoCompleteType="password"
+                      value={password}
+                      onChangeText={(input) => setPassword(input)}
+                  ></TextInput>
+                  <TouchableOpacity onPress={() => setPassword("")}>
+                    <MaterialCommunityIcons
+                      name="close-circle-outline"
+                      size={32}
+                      color="gray"
+                      style={{ marginRight: 20 }}
+                    />
+                  </TouchableOpacity>                
+                </View>
+                <Text style={styles.errorText} >{errorMessage}</Text>
                 <TouchableOpacity
                     onPress={login}
                     style={[styles.button, styles.submitButton]}
                     >
                     <Text style={styles.buttonText}>Log In</Text>
                 </TouchableOpacity>
-                <Text style={styles.errorText} >{errorMessage}</Text>
             </View>
         </TouchableWithoutFeedback>
     );
@@ -78,10 +100,16 @@ const styles = StyleSheet.create({
     textInput: {
       margin: 20,
       borderWidth: 1,
-      width: "80%",
+      width: "60%",
       padding: 10,
       borderColor: "#ccc",
+      marginRight: 6,
     },
+    textInputView: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',    
+    },    
     buttons: {
       flexDirection: "row",
     },
@@ -90,6 +118,7 @@ const styles = StyleSheet.create({
       padding: 10,
       margin: 5,
       borderRadius: 10,
+      marginTop: 0,
     },
     buttonText: {
       fontSize: 18,

@@ -35,7 +35,7 @@ export default function ChatScreen({ navigation }) {
     
     // This sets up the top right button
     navigation.setOptions({
-      title: "Chap App",//(currentName),
+      title: "Chat App",//(currentName),
       headerTitleAlign: "center",
       headerTitleStyle: {
         fontWeight: "bold",
