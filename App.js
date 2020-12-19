@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "./screens/LoginScreen";
 import ChatScreen from "./screens/ChatScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App() {
 {/*      <Stack.Navigator mode="modal"> */}
       <Stack.Navigator>
         <Stack.Screen name="Chat" component={ChatScreen} />
+
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -21,6 +23,26 @@ export default function App() {
             headerTitle: "Chat App",
             headerTitleAlign: "center",
             headerLeft: "", // hide back arrow on hearder
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 24,
+              color: "black",
+            },
+            headerStyle: {
+              height: 100,
+              backgroundColor: "gray",
+              borderBottomColor: "#ccc",
+              borderBottomWidth: 1,
+            },
+          }}
+        />
+        
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{
+            headerTitle: "Chat App",
+            headerTitleAlign: "center",
             headerTitleStyle: {
               fontWeight: "bold",
               fontSize: 24,

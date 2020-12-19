@@ -1,7 +1,7 @@
 import firebase from "../database/firebaseDB";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 
 //    const db = firebase.firestore().collection("todos");
 const db = firebase.firestore();
@@ -12,6 +12,30 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+
+   // This is to set up the top right button
+   useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => signUp()}>
+          <AntDesign
+            name="adduser"
+            size= {40}
+            color= "black"
+            style= {{
+              color: "black",
+              marginRight: 10,
+            }}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  });
+
+    function signUp() {
+      navigation.navigate("SignUp");
+    }
 
     // Firestore successful will go to ChatScreen
     function login() {

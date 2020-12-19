@@ -23,8 +23,10 @@ export default function ChatScreen({ navigation }) {
     // This is the listener for authentication
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
       if (user) {
-        setCurrentID(firebase.auth().currentUser.uid);
-        setCurrentName(firebase.auth().currentUser.email);
+        setCurrentID(user.uid);
+        setCurrentName(user.email);
+//        setCurrentID(firebase.auth().currentUser.uid);
+//        setCurrentName(firebase.auth().currentUser.email);
         navigation.navigate("Chat");
       } else {
         //setCurrentID("");
@@ -66,6 +68,7 @@ export default function ChatScreen({ navigation }) {
       .onSnapshot((collectionSnapshot) => {
         const serverMessages = collectionSnapshot.docs.map((doc) => {
           const data = doc.data();
+          console.log("data");
           console.log(data);
           const returnData = {
             ...doc.data(),
@@ -77,24 +80,26 @@ export default function ChatScreen({ navigation }) {
       });
 
     // This refreshes the screen
-    const unsubscribeRefresh = navigation.addListener('focus', () => {
+//    const unsubscribeRefresh = navigation.addListener('focus', () => {
 //      alert('Refreshed');
-    });
+//    });
 
     return () => {
       unsubscribeAuth();
       unsubscribeSnapshot();
-      unsubscribeRefresh();
+//      unsubscribeRefresh();
     };
   }, []);
 
   function logout() {
 //    setCurrentName("");
 //    setCurrentID("");
+    console.log("Signed out!");
     auth.signOut();
   }
 
   function sendMessages(newMessages) {
+    console.log("newMessages");
     console.log(newMessages);
     const newMessage = newMessages[0];
     db.add(newMessage);
@@ -109,13 +114,12 @@ export default function ChatScreen({ navigation }) {
       listViewProps={{
         style: {
           backgroundColor: "lightgray",
-//          backgroundColor: "#777",
         },
       }}
       user={{
+//       _id: 1,
         _id: currentID,
         name: currentName,
-//       _id: 1,
       }}
     />
   );
