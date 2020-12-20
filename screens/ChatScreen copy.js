@@ -1,12 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity } from "react-native";
 import firebase from "../database/firebaseDB";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { GiftedChat } from "react-native-gifted-chat";
@@ -16,22 +9,21 @@ const auth = firebase.auth();
 
 export default function ChatScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
-  const [currentID, setCurrentID] = useState();
-  const [currentName, setCurrentName] = useState();
+  const [currentID, setCurrentID] = useState("");
+  const [currentName, setCurrentName] = useState("");
 
   useEffect(() => {
+
     // This is the listener for authentication
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-      if (user) {
-//        setCurrentID(user.uid);
-//        setCurrentName(user.email);
-        refreshData();
+    if (user) {
+        refreshData("1"); // reload the date from the db and set state for id & name
         navigation.navigate("Chat");
       } else {
         navigation.navigate("Login");
-      }     
+      }
     });
-
+    
     // This sets up the top right button
     navigation.setOptions({
       title: "Chat App",//(currentName),
@@ -65,6 +57,8 @@ export default function ChatScreen({ navigation }) {
       .onSnapshot((collectionSnapshot) => {
         const serverMessages = collectionSnapshot.docs.map((doc) => {
           const data = doc.data();
+//          console.log("data");
+//          console.log(data);
           const returnData = {
             ...doc.data(),
             createdAt: new Date(data.createdAt.seconds * 1000), // convert to JS date object
@@ -75,15 +69,18 @@ export default function ChatScreen({ navigation }) {
       });
 
     return () => {
+      refreshData("2");
       unsubscribeAuth();
       unsubscribeSnapshot();
     };
   }, []);
 
   // This function call reload the data
-  function refreshData() {
+  function refreshData(recInfo) {
 
     var serverMessages1 = ([]);
+
+    console.log(recInfo);
     var user = auth.currentUser;
     if (user) {
       setCurrentID(user.uid);
@@ -116,10 +113,14 @@ export default function ChatScreen({ navigation }) {
   }
 
   function logout() {
-    auth.signOut();
+    console.log("Signed out!");
+    auth.signOut(); // this will set uid to null
   }
 
   function sendMessages(newMessages) {
+    console.log("newMessages");
+    console.log(newMessages);
+
     const newMessage = newMessages[0];
     db.add(newMessage);
     //setMessages([...newMessages, ...messages]);
@@ -128,7 +129,7 @@ export default function ChatScreen({ navigation }) {
   return (
     <GiftedChat
       messages={messages}
-      onSend={(messages) => sendMessages(messages)}
+      onSend={(messages) => sendMessages(messages)}      
 //      onSend={(newMessages) => sendMessages(newMessages)}
       renderUsernameOnMessage={true}
       listViewProps={{
@@ -137,10 +138,11 @@ export default function ChatScreen({ navigation }) {
         },
       }}
       user={{
-        _id: currentID,
-        name: currentName,
-//        _id: 1,
+//       _id: 1,
+        _id: (currentID),
+        name: (currentName),
       }}
     />
   );
 }
+

@@ -23,10 +23,10 @@ export default function LoginScreen({ navigation }) {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          setEmail("");
-          setPassword("");
+//          setEmail("");
+//          setPassword("");
           alert("Welcome! Start chatting!");
-          console.log("Signed up successful in!");
+          console.log("Signed up successful!");
         })
         .catch((error) => {
           setErrorMessage(error.message);

@@ -46,8 +46,8 @@ export default function LoginScreen({ navigation }) {
       auth
         .signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          setEmail("");
-          setPassword("");
+//          setEmail("");
+//          setPassword("");
           console.log("Signed in!");
 //          navigation.navigate("Chat", { email });
         })
