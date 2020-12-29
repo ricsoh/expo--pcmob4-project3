@@ -12,17 +12,14 @@ export default function App() {
   
   return (
     <NavigationContainer>
-{/*      <Stack.Navigator mode="modal"> */}
       <Stack.Navigator>
-        <Stack.Screen name="Chat" component={ChatScreen} />
-
         <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{
+            headerLeft: "",
             headerTitle: "Chat App",
             headerTitleAlign: "center",
-            headerLeft: "", // hide back arrow on hearder
             headerTitleStyle: {
               fontWeight: "bold",
               fontSize: 24,
@@ -37,6 +34,27 @@ export default function App() {
           }}
         />
         
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={{
+            headerLeft: "",
+            headerTitle: "Chat App",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontWeight: "bold",
+              fontSize: 24,
+              color: "black",
+            },
+            headerStyle: {
+              height: 100,
+              backgroundColor: "gray",
+              borderBottomColor: "#ccc",
+              borderBottomWidth: 1,
+            },
+          }}
+        />
+  
         <Stack.Screen
           name="SignUp"
           component={SignUpScreen}

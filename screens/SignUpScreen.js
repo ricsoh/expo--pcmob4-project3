@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-//    const db = firebase.firestore().collection("todos");
-const db = firebase.firestore();
 const auth = firebase.auth();
 
 export default function LoginScreen({ navigation }) {
@@ -14,7 +12,9 @@ export default function LoginScreen({ navigation }) {
     const [errorMessage, setErrorMessage] = useState("");
 
 
+    // ********************************************************************
     // Firestore create successful will go to ChatScreen
+    // ********************************************************************
     function signUpSubmit() {
       // Clear the input text and error message
       Keyboard.dismiss();
@@ -23,10 +23,7 @@ export default function LoginScreen({ navigation }) {
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-//          setEmail("");
-//          setPassword("");
           alert("Welcome! Start chatting!");
-          console.log("Signed up successful!");
         })
         .catch((error) => {
           setErrorMessage(error.message);
