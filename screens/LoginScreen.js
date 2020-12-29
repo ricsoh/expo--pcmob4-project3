@@ -1,6 +1,6 @@
 import firebase from "../database/firebaseDB";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 
 // ********************************************************************
@@ -14,12 +14,18 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
   
   // ********************************************************************
   // This is to set up the top right button
   // ********************************************************************
   useEffect(() => {
-    // Check if user already signed in, if yes, goto chat screen
+
+    setLoading(true);
+
+    // ********************************************************************
+    // This is the listener for authentication and redirect to chat screen or remain at login screen
+    // ********************************************************************
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
       if (user) {
         setEmail("");
@@ -28,6 +34,7 @@ export default function LoginScreen({ navigation }) {
         Keyboard.dismiss();
         navigation.navigate("Chat");
       }
+      setLoading(false);
     });
 
     // ********************************************************************
@@ -65,6 +72,7 @@ export default function LoginScreen({ navigation }) {
   // Firestore successful will go to ChatScreen
   // ********************************************************************
   function login() {
+    setLoading(true);
     // Clear the input text and error message
     Keyboard.dismiss();
     setErrorMessage("");
@@ -77,6 +85,7 @@ export default function LoginScreen({ navigation }) {
       .catch((error) => {
         setErrorMessage("Sign in Fail!");
       });
+    setLoading(false);
   }
 
   return(
@@ -124,7 +133,7 @@ export default function LoginScreen({ navigation }) {
           onPress={login}
           style={[styles.button, styles.submitButton]}
         >
-          <Text style={styles.buttonText}>Log In</Text>
+          <Text style={styles.buttonText}>{loading ? <ActivityIndicator size="large" color="white"/> : "Log In"}</Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>

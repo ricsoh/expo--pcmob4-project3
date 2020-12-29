@@ -13,7 +13,7 @@ export default function ChatScreen({ navigation }) {
   useEffect(() => {
 
     // ********************************************************************
-    // This is the listener for authentication and redirect to login or chat screen
+    // This is the listener for authentication and redirect to login or remain at chat screen
     // ********************************************************************
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
     if (user) {
