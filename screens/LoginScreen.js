@@ -87,7 +87,7 @@ export default function LoginScreen({ navigation }) {
         setErrorMessage("Sign in Fail!");
       });
 
-      // Stop ActivityIndicator
+    // Stop ActivityIndicator
     setLoading(false);
   }
 

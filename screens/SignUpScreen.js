@@ -1,6 +1,6 @@
 import firebase from "../database/firebaseDB";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const auth = firebase.auth();
@@ -10,6 +10,7 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
 
     // ********************************************************************
@@ -20,6 +21,9 @@ export default function LoginScreen({ navigation }) {
       Keyboard.dismiss();
       setErrorMessage("");
 
+      // Start ActivityIndicator
+      setLoading(true);
+
       auth
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
@@ -28,6 +32,9 @@ export default function LoginScreen({ navigation }) {
         .catch((error) => {
           setErrorMessage(error.message);
         });
+
+      // Stop ActivityIndicator
+      setLoading(false);
     }
 
     return(
@@ -40,8 +47,9 @@ export default function LoginScreen({ navigation }) {
               style={styles.textInput} autoCaptilize="none" autoCompleteType="email" keyboardType="email-address"
               value={email}
               onChangeText={(input) => setEmail(input)}
+              onTextInput ={() => setErrorMessage("")} // Clear error message when there is a input
             ></TextInput>
-            <TouchableOpacity onPress={() => setEmail("")}>
+            <TouchableOpacity onPress={() => { setEmail(""); setErrorMessage("");} }>
               <MaterialCommunityIcons
                 name="close-circle-outline"
                 size={32}
@@ -58,8 +66,9 @@ export default function LoginScreen({ navigation }) {
               style={styles.textInput} autoCaptilize="none" autoCompleteType="password"
               value={password}
               onChangeText={(input) => setPassword(input)}
+              onTextInput ={() => setErrorMessage("")} // Clear error message when there is a input
             ></TextInput>
-            <TouchableOpacity onPress={() => setPassword("")}>
+            <TouchableOpacity onPress={ () => {setPassword(""); setErrorMessage("");} }>
               <MaterialCommunityIcons
                 name="close-circle-outline"
                 size={32}
@@ -73,7 +82,7 @@ export default function LoginScreen({ navigation }) {
             onPress={signUpSubmit}
             style={[styles.button, styles.submitButton]}
           >
-            <Text style={styles.buttonText}>Sign Up</Text>
+            <Text style={styles.buttonText}>{loading ? <ActivityIndicator size="large" color="white"/> : "Sign Up"}</Text>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
