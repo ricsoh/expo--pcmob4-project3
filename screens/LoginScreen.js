@@ -3,9 +3,6 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 
-// ********************************************************************
-//    const db = firebase.firestore().collection("todos")
-// ********************************************************************
 const db = firebase.firestore();
 const auth = firebase.auth();
 
@@ -21,12 +18,13 @@ export default function LoginScreen({ navigation }) {
   // ********************************************************************
   useEffect(() => {
 
-    setLoading(true);
-
     // ********************************************************************
     // This is the listener for authentication and redirect to chat screen or remain at login screen
     // ********************************************************************
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
+      // Start ActivityIndicator
+      setLoading(true);
+
       if (user) {
         setEmail("");
         setPassword("");
@@ -34,6 +32,7 @@ export default function LoginScreen({ navigation }) {
         Keyboard.dismiss();
         navigation.navigate("Chat");
       }
+      // Stop ActivityIndicator
       setLoading(false);
     });
 
@@ -72,10 +71,12 @@ export default function LoginScreen({ navigation }) {
   // Firestore successful will go to ChatScreen
   // ********************************************************************
   function login() {
-    setLoading(true);
     // Clear the input text and error message
     Keyboard.dismiss();
     setErrorMessage("");
+
+    // Start ActivityIndicator
+    setLoading(true);
 
     auth
       .signInWithEmailAndPassword(email, password)
@@ -85,6 +86,8 @@ export default function LoginScreen({ navigation }) {
       .catch((error) => {
         setErrorMessage("Sign in Fail!");
       });
+
+      // Stop ActivityIndicator
     setLoading(false);
   }
 
@@ -98,9 +101,10 @@ export default function LoginScreen({ navigation }) {
             style={styles.textInput} autoCaptilize="none" autoCompleteType="email" keyboardType="email-address"
             value={email}
             onChangeText={(input) => setEmail(input)}
+            onTextInput ={() => setErrorMessage("")} // Clear error message when there is a input
             >
           </TextInput>
-          <TouchableOpacity onPress={() => setEmail("")}>
+          <TouchableOpacity onPress={() => { setEmail(""); setErrorMessage("");} }>
             <MaterialCommunityIcons
               name="close-circle-outline"
               size={32}
@@ -117,9 +121,10 @@ export default function LoginScreen({ navigation }) {
             style={styles.textInput} autoCaptilize="none" autoCompleteType="password"
             value={password}
             onChangeText={(input) => setPassword(input)}
+            onTextInput ={() => setErrorMessage("")} // Clear error message when there is a input
             >
           </TextInput>
-          <TouchableOpacity onPress={() => setPassword("")}>
+          <TouchableOpacity onPress={ () => {setPassword(""); setErrorMessage("");} }>
             <MaterialCommunityIcons
               name="close-circle-outline"
               size={32}
