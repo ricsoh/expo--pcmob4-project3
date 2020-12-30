@@ -17,13 +17,13 @@ export default function ChatScreen({ navigation }) {
     // ********************************************************************
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
     if (user) {
-        refreshData();
+//        refreshData();
 //        navigation.navigate("Chat");
       } else {
         navigation.navigate("Login");
       }
     });
-{/*
+
     // This loads data from firebase
     const unsubscribeSnapshot = db
       .orderBy("createdAt", "desc")
@@ -37,10 +37,10 @@ export default function ChatScreen({ navigation }) {
           };
           return returnData;
         });
-        console.log("unsubscribeSnapshot: " + serverMessages);
+//        console.log("unsubscribeSnapshot: " + serverMessages);
         setMessages(serverMessages);
       });
-*/}
+
     // ********************************************************************
     // This sets up the top right logout button
     // ********************************************************************
@@ -60,12 +60,12 @@ export default function ChatScreen({ navigation }) {
     });
     return () => {
       unsubscribeAuth();
-//      unsubscribeSnapshot();
+      unsubscribeSnapshot();
     };
   }, []);
 
   // ********************************************************************
-  // Reload data from DB and refresh the chat screen
+  // Reload data from DB and refresh the chat screen (not used)
   // ********************************************************************
   function refreshData() {
 
@@ -105,6 +105,7 @@ export default function ChatScreen({ navigation }) {
       messages={messages}
       onSend={(newMessages) => sendMessages(newMessages)}
       renderUsernameOnMessage={true}
+      scrollToBottom // This add a scroll to bottom icon
       listViewProps={{
         style: {
           backgroundColor: "lightgray",
