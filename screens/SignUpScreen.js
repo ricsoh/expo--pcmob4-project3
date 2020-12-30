@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const auth = firebase.auth();
 
-export default function LoginScreen({ navigation }) {
+export default function SignUpScreen({ navigation }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
